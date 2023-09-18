@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <Button
+        android:id="@+id/btn_local"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="local"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <Button
+        android:id="@+id/btn_asset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="asset"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_local"/>
+    <TextView
+        android:id="@+id/sample_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <com.wz.cmake.widget.AudioRecordView
+        android:id="@+id/audio_record_view"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sample_text">
+        <com.wz.cmake.widget.RecordButton
+            android:id="@+id/record_button"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:background="@drawable/audio_record_normal"/>
+        <ImageView
+            android:id="@+id/deleteBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="right|top"
+            android:layout_marginTop="80dp"
+            android:layout_marginRight="20dp"
+            android:padding="10dp"
+            android:src="@mipmap/audio_record_delete"
+            tools:ignore="RtlHardcoded" />
+
+        <TextView
+            android:id="@+id/recordTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="按住说话" />
+    </com.wz.cmake.widget.AudioRecordView>
+</androidx.constraintlayout.widget.ConstraintLayout>
