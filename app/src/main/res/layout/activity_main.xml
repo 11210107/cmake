@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="local"
+        android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
     <Button
@@ -17,6 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="asset"
+        android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_local"/>
     <TextView
@@ -24,10 +26,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/sound_mode_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/sample_text"/>
+
     <com.wz.cmake.widget.AudioRecordView
         android:id="@+id/audio_record_view"
         android:layout_width="match_parent"
@@ -35,7 +46,7 @@
         android:visibility="visible"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sample_text">
+        app:layout_constraintTop_toBottomOf="@+id/sound_mode_spinner">
         <com.wz.cmake.widget.RecordButton
             android:id="@+id/record_button"
             android:layout_width="150dp"

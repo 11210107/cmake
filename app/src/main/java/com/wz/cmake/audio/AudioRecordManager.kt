@@ -21,6 +21,11 @@ class AudioRecordManager {
         AudioRecorder.getInstance().setRecordSoundSizeListener(listener)
     }
 
+    //录音结束文件监听回调
+    fun setRecordResultListener(listener: RecordResultListener) {
+        AudioRecorder.getInstance().setRecordResultListener(listener)
+    }
+
 
     fun setStatus(currentStatus: AudioRecordStatus) {
         when (currentStatus) {

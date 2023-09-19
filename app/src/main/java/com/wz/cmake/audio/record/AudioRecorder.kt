@@ -100,6 +100,10 @@ class AudioRecorder {
         mRecordSoundSizeListener = listener
     }
 
+    fun setRecordResultListener(listener:RecordResultListener){
+        recordResultListener = listener
+    }
+
     fun setRecordConfig(config:RecordConfig){
         currentConfig = config
     }
@@ -217,9 +221,12 @@ class AudioRecorder {
             audioRecord?.startRecording()
             val byteBuffer = ByteArray(bufferSizeInBytes)
             while (audioRecordStatus == AudioRecordStatus.AUDIO_RECORD_START) {
-                val end = audioRecord?.read(byteBuffer, 0, byteBuffer.size)?:0
-                notifyData(byteBuffer)
-                fos.write(byteBuffer, 0, end)
+                val readSize = audioRecord?.read(byteBuffer, 0, byteBuffer.size)?:0
+                if (AudioRecord.ERROR_INVALID_OPERATION != readSize) {
+                    notifyData(byteBuffer)
+//                    fos.write(byteBuffer)
+                    fos.write(byteBuffer, 0, readSize)
+                }
                 fos.flush()
             }
             audioRecord?.stop()
@@ -271,7 +278,7 @@ class AudioRecorder {
     }
 
     private fun makeWav() {
-        if (!FileUtil.isFile(resultFile) || FileUtil.isFileEmpty(resultFile)) return
+        if (!FileUtil.isFile(resultFile) || !FileUtil.isFileEmpty(resultFile)) return
         val wavHeader = WavUtils.generateWavHeader(
             resultFile?.length()?.toInt()?:0,
             currentConfig.sampleRate,

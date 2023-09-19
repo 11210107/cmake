@@ -50,7 +50,8 @@ Java_com_wz_cmake_MainActivity_voiceChangeNative
             case TYPE_LOLITA:  // 萝莉
                 LOGE("%s","start play lolita sound")
                 system->createDSPByType(FMOD_DSP_TYPE_PITCHSHIFT, &dsp);    // 可改变音调
-                dsp->setParameterFloat(FMOD_DSP_PITCHSHIFT_PITCH,8.0f);     // 8.0 为一个八度
+//                dsp->setParameterFloat(FMOD_DSP_PITCHSHIFT_PITCH,300.0f);     // 8.0 为一个八度
+                dsp->setParameterFloat(FMOD_DSP_PITCHSHIFT_PITCH,2.0f);
                 system->playSound(sound,0, false, &channel);
                 channel->addDSP(0, dsp);
                 break;
@@ -62,15 +63,28 @@ Java_com_wz_cmake_MainActivity_voiceChangeNative
                 dsp->setParameterFloat(FMOD_DSP_PITCHSHIFT_PITCH,0.8f);
                 LOGE("%s","setParameterFloat")
                 system->playSound(sound,0, false, &channel);
+//                channel->getFrequency(&frequency);
+//                frequency = frequency * 0.855f;                                  //频率*2
+//                channel->setFrequency(frequency);
                 channel->addDSP(0, dsp);
                 break;
 
             case TYPE_THRILLER:   // 惊悚
                 LOGE("%s","start play thriller sound")
+                system->createDSPByType(FMOD_DSP_TYPE_PITCHSHIFT, &dsp);
+                dsp->setParameterFloat(FMOD_DSP_PITCHSHIFT_PITCH,0.7f);
+                channel->addDSP(0,dsp);
+
+                system->createDSPByType(FMOD_DSP_TYPE_ECHO, &dsp);
+                dsp->setParameterFloat(FMOD_DSP_ECHO_DELAY,200);
+                dsp->setParameterFloat(FMOD_DSP_ECHO_FEEDBACK,20);
+                channel->addDSP(1,dsp);
+
                 system->createDSPByType(FMOD_DSP_TYPE_TREMOLO, &dsp);       //可改变颤音
-                dsp->setParameterFloat(FMOD_DSP_TREMOLO_SKEW,5);           // 时间偏移低频振荡周期
+                dsp->setParameterFloat(FMOD_DSP_TREMOLO_FREQUENCY,10);           // 时间偏移低频振荡周期
+                dsp->setParameterFloat(FMOD_DSP_TREMOLO_SKEW,0.8);           // 时间偏移低频振荡周期
                 system->playSound(sound,0, false, &channel);
-                channel->addDSP(0, dsp);
+                channel->addDSP(2, dsp);
                 break;
             case TYPE_FUNNY:  // 搞怪
                 LOGE("%s","start play funny sound")
@@ -78,7 +92,7 @@ Java_com_wz_cmake_MainActivity_voiceChangeNative
                 system->playSound(sound,0, false, &channel);
                 channel->addDSP(0, dsp);
                 channel->getFrequency(&frequency);
-                frequency = frequency * 2;                                  //频率*2
+                frequency = frequency * 1.5;                                  //频率*2
                 channel->setFrequency(frequency);
                 break;
             case TYPE_ETHEREAL: // 空灵
@@ -90,14 +104,14 @@ Java_com_wz_cmake_MainActivity_voiceChangeNative
                 system->playSound(sound,0, false, &channel);
                 channel->addDSP(0, dsp);
                 break;
-            case TYPE_CHORUS:
+            case TYPE_CHORUS: // 和声
                 system->createDSPByType(FMOD_DSP_TYPE_ECHO, &dsp);
                 dsp->setParameterFloat(FMOD_DSP_ECHO_DELAY,100);
                 dsp->setParameterFloat(FMOD_DSP_ECHO_FEEDBACK,50);
                 system->playSound(sound,0, false, &channel);
                 channel->addDSP(0, dsp);
                 break;
-            case TYPE_TREMOLO:
+            case TYPE_TREMOLO: // 颤音
                 system->createDSPByType(FMOD_DSP_TYPE_TREMOLO, &dsp);
                 dsp->setParameterFloat(FMOD_DSP_TREMOLO_SKEW,0.8);
                 system->playSound(sound,0, false, &channel);
@@ -108,7 +122,7 @@ Java_com_wz_cmake_MainActivity_voiceChangeNative
         LOGE("%s", "catch exception...")
         goto end;
     }
-
+    channel->setVolume(12.0f);
     system->update();
 
     // 每隔一秒检测是否播放结束

@@ -1,6 +1,5 @@
 package com.wz.cmake.util
 
-import android.os.Environment
 import android.text.TextUtils
 import android.util.Log
 import com.wz.cmake.audio.AudioRecordManager
@@ -68,6 +67,23 @@ class FileUtil {
         fun isFileEmpty(file:File?):Boolean{
             return (file?.length() ?: 0 > 0)
         }
-
+        @JvmStatic
+        fun deleteFile(deleteFile: File?) {
+            if (deleteFile != null) {
+                val filePath = deleteFile.absolutePath
+                val file = File(filePath)
+                if (file.isDirectory) {
+                    val files = file.listFiles()
+                    if (files != null) {
+                        for (f in files) {
+                            deleteFile(f)
+                        }
+                    }
+                    file.delete()
+                } else if (file.exists()) {
+                    val result = file.delete()
+                }
+            }
+        }
     }
 }
