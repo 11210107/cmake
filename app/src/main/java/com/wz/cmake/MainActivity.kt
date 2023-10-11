@@ -7,29 +7,30 @@ import android.media.AudioFormat
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Environment
-import android.os.Looper
-import android.util.DisplayMetrics
 import android.view.View
-import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.wz.cmake.audio.AudioRecordManager
+import com.wz.cmake.audio.Mp3Encoder
 import com.wz.cmake.audio.RecordResultListener
 import com.wz.cmake.audio.record.RecordConfig
 import com.wz.cmake.audio.record.RecordFormat
 import com.wz.cmake.databinding.ActivityMainBinding
 import com.wz.cmake.util.APPUtil
+import com.wz.cmake.util.ContextUtil
+import com.wz.cmake.util.DateUtil
 import com.wz.cmake.util.FileUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.fmod.FMOD
 import java.io.File
+import java.util.Locale
 
 
 class MainActivity : AppCompatActivity() {
@@ -76,14 +77,39 @@ class MainActivity : AppCompatActivity() {
 
     private fun initRecordConfig() {
         val sampleRate = 44100
-        val recordConfig = RecordConfig(RecordFormat.WAV, AudioFormat.CHANNEL_IN_MONO,AudioFormat.ENCODING_PCM_16BIT,sampleRate)
+        val recordConfig = RecordConfig(RecordFormat.PCM, AudioFormat.CHANNEL_IN_MONO,AudioFormat.ENCODING_PCM_16BIT,sampleRate)
         AudioRecordManager.getInstance().setCurrentConfig(recordConfig)
         AudioRecordManager.getInstance().setRecordResultListener(object : RecordResultListener{
             override fun onResult(result: File?) {
                 recordFile = result
                 playRecordAudio()
+                pcm2mp3()
             }
         })
+    }
+
+    //输出MP3的码率
+    private val BIT_RATE = 16
+    private fun pcm2mp3() {
+        val fileDir = String.format(
+            Locale.getDefault(),
+            "%s/Record/",
+            ContextUtil.get()?.dataDir?.absoluteFile
+        )
+        val fileName = String.format(
+            Locale.getDefault(),
+            "lame_encode_%s",
+            DateUtil.millis2String(System.currentTimeMillis(), DateUtil.SIMPLE_DATE_FORMAT)
+        )
+        val mp3File = File(String.format(Locale.getDefault(), "%s%s.mp3", fileDir, fileName))
+        val mp3Encoder = Mp3Encoder()
+        mp3Encoder.encodeMp3(
+            recordFile?.absolutePath ?: "",
+            mp3File.absolutePath,
+            44100,
+            1,
+            BIT_RATE
+        )
     }
 
     private fun playRecordAudio() {
@@ -95,7 +121,6 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
-
     }
 
     private fun initview() {
@@ -179,7 +204,10 @@ class MainActivity : AppCompatActivity() {
     private fun playerEnd(msg: String) {
         MainScope().launch {
             Toast.makeText(this@MainActivity, "" + msg, Toast.LENGTH_SHORT).show()
-            FileUtil.deleteFile(recordFile)
+            withContext(Dispatchers.IO) {
+                delay(5000)
+                FileUtil.deleteFile(recordFile)
+            }
         }
     }
 

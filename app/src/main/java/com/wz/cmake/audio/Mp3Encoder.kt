@@ -23,5 +23,8 @@ class Mp3Encoder {
         }
 
     }
+    external fun encodeMp3(pcmPath:String,mp3Path:String,sampleRate:Int,channels:Int,bitRate:Int)
+
+    external fun destroy()
 
 }
