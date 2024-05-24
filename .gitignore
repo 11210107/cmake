@@ -11,6 +11,8 @@
 /build
 /captures
 .externalNativeBuild
+
+
 .cxx
 local.properties
 gradle/wrapper/gradle-wrapper.properties
