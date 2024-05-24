@@ -10,4 +10,47 @@
     <color name="red">#FFF03E3E</color>
     <color name="audio_record_selector_normal_color">#FF4EC899</color>
     <color name="audio_record_selector_pressed_color">#FF99DFC4</color>
+
+    <!--    基础颜色-->
+    <color name="color_base_primary">#FFE2B453</color>
+    <color name="color_base_assist">#FF53DFDF</color>
+    <color name="color_base_alarm">#FFF03E3E</color>
+    <color name="color_base_alarm_bg">#26F03E3E</color>
+    <color name="color_base_warning">#FFFD7E14</color>
+    <color name="color_base_pass">#FF12B886</color>
+    <color name="color_base_gradient_end">#FF806FFF</color>
+    <color name="color_text_selected">#FF75A0F7</color>
+    <color name="color_base_primary_33">#332468F3</color>
+    <color name="color_btn_unable">#F3E1BA</color>
+
+    <!--    基础文字颜色-->
+    <color name="color_base_text_primary">#FF000000</color>
+    <color name="color_base_text_secondary">#FF1F263E</color>
+    <color name="color_base_text_normal">#FF9199BD</color>
+    <color name="color_base_text_dark">#FF242933</color>
+    <color name="color_base_text_bold">#FF323232</color>
+    <color name="color_base_text_placeholder">#FF81848A</color>
+    <color name="color_base_text_disabled">#FFAFB2BD</color>
+    <color name="color_base_text_accent">#8A7558</color>
+    <color name="color_base_text_default">#FFAFB5BD</color>
+    <color name="color_base_text_selected">#FF212121</color>
+    <color name="color_base_text_enable">#FF0B0C07</color>
+    <color name="color_base_text_unable">#FF8A7558</color>
+
+    <!--    基础背景颜色-->
+    <color name="color_base_bg_white">#FFFFFFFF</color>
+    <color name="color_base_bg_light">#FFF9FAFE</color>
+    <color name="color_base_bg_light_2">#FFF7F7F7</color>
+    <color name="color_base_bg_light_blue">#FFEFF6FE</color>
+    <color name="color_base_bg_light_3">#FFF4F5F7</color>
+    <color name="color_base_bg_yellow">#FFFCF8EE</color>
+    <color name="color_base_bg_default">#FFF8FAFC</color>
+    <color name="color_base_bg_grey">#FFF7F7F7</color>
+    <color name="color_base_stroke">#FFCCCCCC</color>
+
+    <!--    基础分割线颜色-->
+    <color name="color_base_divider_gray_1">#FFEBECF0</color>
+    <color name="color_base_divider_gray_2">#FFD7D9E1</color>
+    <color name="color_base_divider_gray_3">#FFC1C4D0</color>
+    <color name="color_base_divider_dialog">#FFE5E5E5</color>
 </resources>

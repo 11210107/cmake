@@ -1,17 +1,31 @@
 #include <jni.h>
+#include <string.h>
 #include <stdio.h>
 #include "lame_encode.h"
 #include "mp3_encode.h"
 #include <android/log.h>
+#define LOG_TAG "Lame"
 #define LOGI(FORMAT, ...) __android_log_print(ANDROID_LOG_INFO,"fmodSound",FORMAT,##__VA_ARGS__);
+#define LOGD(FORMAT, args...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, FORMAT, ##args);
 #define LOGE(FORMAT, ...) __android_log_print(ANDROID_LOG_ERROR,"fmodSound",FORMAT,##__VA_ARGS__);
-
+JNIEXPORT jint JNICALL
+doAction(JNIEnv *env, jobject thiz,jstring name) {
+    jsize size = env->GetStringUTFLength( name);
+    LOGD("name  length: %d",size);
+    const char *str;
+    str = env->GetStringUTFChars(name, NULL);
+    LOGD("name  str: %s",str);
+    __android_log_print(ANDROID_LOG_ERROR, "CPP TEST","doAction name：%s",str);
+    __android_log_print(ANDROID_LOG_ERROR, "CPP TEST","doAction name：%s","hello");
+    return 0;
+}
 /**
 * 动态注册
 */
 JNINativeMethod methods[] = {
         {"encodeMp3","(Ljava/lang/String;Ljava/lang/String;III)V",(void *) encodeMp3},
-        {"destroy","()V",(void *) destroy}
+        {"destroy","()V",(void *) destroy},
+        {"doAction","(Ljava/lang/String;)I",(jint *)(doAction)}
 };
 
 /**

@@ -1,7 +1,6 @@
 package com.wz.cmake.audio.record
 
 import android.media.AudioFormat
-import android.os.Environment
 import com.wz.cmake.util.ContextUtil
 
 class RecordConfig() {

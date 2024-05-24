@@ -5,7 +5,6 @@ import android.util.Log
 import com.wz.cmake.audio.AudioRecordManager
 import java.io.File
 import java.util.Locale
-import kotlin.text.*
 
 class FileUtil {
 

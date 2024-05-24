@@ -1,28 +1,37 @@
 package com.wz.cmake
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.AssetFileDescriptor
 import android.media.AudioFormat
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.wz.cmake.api.AudioServiceImpl
+import com.wz.cmake.api.EmailService
+import com.wz.cmake.api.IAudioService
+import com.wz.cmake.api.OrderService
 import com.wz.cmake.audio.AudioRecordManager
 import com.wz.cmake.audio.Mp3Encoder
 import com.wz.cmake.audio.RecordResultListener
 import com.wz.cmake.audio.record.RecordConfig
 import com.wz.cmake.audio.record.RecordFormat
 import com.wz.cmake.databinding.ActivityMainBinding
+import com.wz.cmake.model.Order
+import com.wz.cmake.ui.JSBridgeActivity
 import com.wz.cmake.util.APPUtil
 import com.wz.cmake.util.ContextUtil
 import com.wz.cmake.util.DateUtil
 import com.wz.cmake.util.FileUtil
+import com.wz.cmake.util.GsonUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -30,11 +39,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.fmod.FMOD
 import java.io.File
+import java.lang.reflect.Proxy
 import java.util.Locale
 
 
 class MainActivity : AppCompatActivity() {
-
+    val TAG = MainActivity::class.java.simpleName
     companion object {
         // Used to load the 'cmake' library on application startup.
         init {
@@ -137,6 +147,11 @@ class MainActivity : AppCompatActivity() {
         }
         // Example of a call to a native method
         binding.sampleText.text = stringFromJNI()
+        binding.sampleText.setOnClickListener {
+            val mp3Encoder = Mp3Encoder()
+            val result = mp3Encoder.doAction("mp3Encoder")
+            Log.e(TAG, "result:$result")
+        }
 
         binding.soundModeSpinner.adapter = soundAdapter
 
@@ -150,6 +165,76 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
+        binding.btnDynamicAgent.setOnClickListener {
+            val impl: UserProxyService = Proxy.newProxyInstance(
+                UserProxyService::class.java.classLoader,
+                arrayOf<Class<*>>(
+                    UserProxyService::class.java
+                )
+            ) { proxy, method, args ->
+                Log.e(TAG, "invoke method:$method args:$args")
+//                method.invoke(impl,args)
+                Log.e(TAG, "invoke method end")
+                null
+            } as UserProxyService
+            Log.e(TAG,"impl")
+            impl.update()
+        }
+
+        binding.btnProxyClass.setOnClickListenerProxy(object :OnClickListenerProxy{
+            override fun onClick(v: View) {
+                Log.e(TAG,"create class code")
+                val recordService = createLoggerProxy(AudioServiceImpl()) as IAudioService
+                recordService.record()
+            }
+        })
+        val monitor = object :PerformanceMonitor{
+            override fun startMonitor() {
+                Log.e(TAG,"startMonitor")
+            }
+
+            override fun stopMonitor() {
+                Log.e(TAG,"stopMonitor")
+            }
+
+            override fun logPerformance(methodName: String, executionTime: Long) {
+                Log.e(TAG,"methodName:$methodName executed in $executionTime ms")
+            }
+
+        }
+        binding.btnMethodTime.setOnClickListenerProxy(object :OnClickListenerProxy{
+            override fun onClick(v: View) {
+//                val monitorProxy = createPerformanceMonitorProxy(MonitorApiImpl(),monitor) as IMonitorApi
+//                monitorProxy.execute()
+
+                val runnable = createRunnableMonitorProxy(Runnable {
+                    Log.e(TAG, "thread start")
+                     Thread.sleep(5000L)
+                    Log.e(TAG, "thread end")
+                },monitor) as Runnable
+                Thread(runnable).start()
+            }
+
+        })
+
+        binding.btnGson.setOnClickListenerProxy(object :OnClickListenerProxy{
+            override fun onClick(v: View) {
+                GsonUtil.serialization()
+                GsonUtil.deserialization()
+                GsonUtil.user2Json()
+                GsonUtil.json2User()
+                val order = Order("123456",0,"123@gmail.com","12345678901")
+                val email = EmailService()
+                OrderService(email).notifyOrderShipped(order)
+            }
+        })
+        binding.btnJsBridge.setOnClickListenerProxy(object :OnClickListenerProxy{
+            override fun onClick(v: View) {
+                startActivity(Intent(this@MainActivity,JSBridgeActivity::class.java))
+            }
+
+        })
     }
 
     private fun mediaPlay() {

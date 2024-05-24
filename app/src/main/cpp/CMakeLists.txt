@@ -20,8 +20,9 @@ func(1 3 5)
 project("cmake")
 
 set(LAME_LIBMP3_DIR ${CMAKE_SOURCE_DIR}/lame-3.100_libmp3lame)
-
+# 导入lame头文件
 include_directories(${CMAKE_SOURCE_DIR}/lame-3.100_libmp3lame)
+# 添加一个lame的库（动态库SHARED，静态库STATIC）
 add_library(
         mp3lame
         SHARED
@@ -53,7 +54,7 @@ add_library(
         cmake
         SHARED
         ${allCPP})
-# 设置第三方so库的路径
+# 设置第三方so库的路径，导入库文件（方式一）
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -L${CMAKE_SOURCE_DIR}/../jniLibs/${CMAKE_ANDROID_ARCH_ABI}")
 #Android6.0之前配置添加预编译库
 #[[set(FMOD_LIB_DIR ${CMAKE_SOURCE_DIR}/../jniLibs/${ANDROID_ABI})
@@ -73,10 +74,11 @@ set_target_properties(fmodL
 #[[find_library(
         log-lib
         log)]]
-
+# 链接到总库中
 target_link_libraries( 
-        cmake
+        cmake #被链接的总库
         fmod
         fmodL
-        mp3lame
-        log)
+        mp3lame # 具体的库 链接到libcmake.so里面去
+        log #自动寻找
+        )
