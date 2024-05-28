@@ -8,6 +8,7 @@ import android.media.AudioFormat
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Environment
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -148,9 +149,12 @@ class MainActivity : AppCompatActivity() {
         // Example of a call to a native method
         binding.sampleText.text = stringFromJNI()
         binding.sampleText.setOnClickListener {
-            val mp3Encoder = Mp3Encoder()
-            val result = mp3Encoder.doAction("mp3Encoder")
+//            val mp3Encoder = Mp3Encoder()
+//            val result = mp3Encoder.doAction("mp3Encoder")
+            val result = doAction("mp3Encoder 转码")
             Log.e(TAG, "result:$result")
+
+            nativeThread()
         }
 
         binding.soundModeSpinner.adapter = soundAdapter
@@ -282,8 +286,17 @@ class MainActivity : AppCompatActivity() {
      * which is packaged with this application.
      */
     external fun stringFromJNI(): String
-
-
+    external fun nativeThread()
+    external fun doAction(name:String):Int
+    fun runThread() {
+        Log.i(
+            TAG,
+            "Thread:${Thread.currentThread().name} isMainThread:${Looper.myLooper() == Looper.getMainLooper()}"
+        )
+        MainScope().launch {
+            Toast.makeText(this@MainActivity, "C++ Thread Execute", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     // 给C++调用的函数
     private fun playerEnd(msg: String) {

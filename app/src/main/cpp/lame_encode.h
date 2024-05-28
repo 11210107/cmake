@@ -9,7 +9,8 @@ extern "C" {
 #endif
 JNIEXPORT void JNICALL encodeMp3(JNIEnv *env, jobject,jstring,jstring,jint,jint,jint);
 JNIEXPORT void JNICALL destroy(JNIEnv *env, jobject);
-
+extern "C"
+jint registerNativeMethod(JNIEnv *env);
 #ifdef __cplusplus
 
 }

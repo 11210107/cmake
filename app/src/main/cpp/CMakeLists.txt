@@ -6,6 +6,8 @@ include_directories(${CMAKE_SOURCE_DIR}/inc)
 #查找当前目录所有源文件保存到DIR_SRCS中
 #aux_source_directory(. DIR_SRCS)
 file(GLOB allCPP *.c *.h *.cpp)
+
+
 function(func a b c)
         message("call function func")
         message("a:${a}")
@@ -50,10 +52,16 @@ add_library(
 )
 
 # 添加一个库，根据native-lib.cpp源文件编译一个native-lib的动态库
-add_library( 
+add_library(
         cmake
         SHARED
         ${allCPP})
+#add_library(
+#        cmake
+#        SHARED
+#        native-lib.cpp
+#        vm_manager.h
+#        vm_manager.cpp)
 # 设置第三方so库的路径，导入库文件（方式一）
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -L${CMAKE_SOURCE_DIR}/../jniLibs/${CMAKE_ANDROID_ARCH_ABI}")
 #Android6.0之前配置添加预编译库
